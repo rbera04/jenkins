@@ -25,11 +25,14 @@ pipeline {
                     sh 'git clone -b master https://github.com/rbera04/docker.git'
                     sh 'cp java.dockerfile myfirstrepo/my-app/'
                     sh 'cd myfirstrepo/my-app && docker build -t rbera08/myapp:v1 .'
+                    // sh 'docker login -u ${USERNAME} -p ${PASSWORD} ${DOCKER_REPOSITORY}'
+                    docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
                     sh 'docker push rbera08/myapp:v1'
                 }
             }
             stage('deploy'){
                 steps {
+                    docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
                     sh 'docker pull rbera08/myapp:v1'
                     sh 'docker run -dit -p 8085:80 myapp:v1'
                 }
